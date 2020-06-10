@@ -1,0 +1,40 @@
+#case study on pokemon
+library(dplyr)
+library(tidyverse)
+pokemon %>%
+  select(-1) -> pokemon
+as.factor(pokemon$capture_rate) -> pokemon$capture_rate
+as.factor(pokemon$classification) -> pokemon$classification
+as.factor(pokemon$japanese_name) -> pokemon$japanese_name
+as.factor(pokemon$name) -> pokemon$name
+as.factor(pokemon$type1) -> pokemon$type1
+as.factor(pokemon$type2) -> pokemon$type2
+table(pokemon$type1)
+# selecting the green pokemon
+pokemon %>%
+  filter(type1 == "grass" & type2 == "poison") %>%
+  filter(speed == "90") -> my_green_pokemon
+
+#selecting the water pokemon
+pokemon %>%
+  filter(type1 == "water" & type2 == "psychic") %>%
+  filter(sp_defense == "110")-> my_water_pokemon
+  view(my_water_pokemon)
+# selecting the fire pokemon
+  pokemon %>%
+    filter(type1 == "fire" & type2 == "fighting" & sp_attack == "130") -> my_fire_pokemon
+  view(my_fire_pokemon)
+  rbind(my_water_pokemon, my_fire_pokemon, my_green_pokemon) -> my_pokemons
+  view(my_pokemons)
+  # classification algorithm on pokemon dataset
+  library(caTools)
+  library(dplyr)
+  sample.split(pokemon$is_legendary, SplitRatio = 0.65) -> split_values
+  subset(pokemon, split_values == T) -> train_set
+  subset(pokemon, split_values == F) -> test_set
+  library(rpart)
+  rpart(is_legendary ~., data = train_set) -> mod
+  predict(mod,test_set, type = "class") -> pre_values
+  view(pre_values)
+  
+ 
